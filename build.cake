@@ -1,6 +1,7 @@
 #tool "nuget:?package=NUnit.ConsoleRunner"
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Figlet"
+#tool "nuget:?package=ILRepack"
 #load "./parameters.cake"
 
 
@@ -122,23 +123,32 @@ Task("Run-Unit-Tests")
     });
 
 
-
 Task("Copy-Files")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 	{
 		EnsureDirectoryExists(parameters.ResultBinDir);
 
-		CopyFileToDirectory(parameters.BuildDir + "/Cake.SqlServer.dll", parameters.ResultBinDir);
-		CopyFileToDirectory(parameters.BuildDir + "/Cake.SqlServer.pdb", parameters.ResultBinDir);
-		CopyFileToDirectory(parameters.BuildDir + "/Cake.SqlServer.xml", parameters.ResultBinDir);
+		// CopyFileToDirectory(parameters.BuildDir + "/Cake.Core.dll", parameters.ResultBinDir);
+		// CopyFileToDirectory(parameters.BuildDir + "/Cake.SqlServer.dll", parameters.ResultBinDir);
+		// CopyFileToDirectory(parameters.BuildDir + "/Cake.SqlServer.pdb", parameters.ResultBinDir);
+		// CopyFileToDirectory(parameters.BuildDir + "/Cake.SqlServer.xml", parameters.ResultBinDir);
 
-		CopyFiles(parameters.BuildDir + "/Microsoft.*.dll", parameters.ResultBinDir);
+		// CopyFiles(parameters.BuildDir + "/Microsoft.*.dll", parameters.ResultBinDir);
 
 		CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, parameters.ResultBinDir);
 	});
 
 
+
+Task("ILRepack")
+    .IsDependentOn("Copy-Files")
+    .Does(() => 
+    {
+        var assemblyPaths = GetFiles(parameters.BuildDir +"/*.dll");
+
+        ILRepack(parameters.ResultBinDir + "/Merged.Cake.SqlServer.dll", parameters.BuildDir + "/Cake.SqlServer.dll", assemblyPaths, new ILRepackSettings { Internalize = true });
+    });
 
 Task("Create-NuGet-Packages")
     .IsDependentOn("Copy-Files")

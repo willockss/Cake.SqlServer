@@ -65,7 +65,8 @@ public class BuildParameters
 
             IsMasterBranch = isMaster,
             ReleaseNotes = context.ParseReleaseNotes("./ReleaseNotes.md"),
-            SkipTests = StringComparer.OrdinalIgnoreCase.Equals("True", context.Argument("skiptests", "false")),
+            // SkipTests = StringComparer.OrdinalIgnoreCase.Equals("True", context.Argument("skiptests", "false")),
+            SkipTests = context.HasArgument("skiptests"),
         };
     }
 

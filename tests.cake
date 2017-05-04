@@ -1,5 +1,6 @@
-#addin nuget:https://myget.org/f/cake-sqlserver/?package=Cake.SqlServer
+//#addin nuget:https://myget.org/f/cake-sqlserver/?package=Cake.SqlServer
 //#r "src/Cake.SqlServer/bin/debug/Cake.SqlServer.dll"
+#r "build-results/Merged.Cake.SqlServer.dll"
 
 var target = Argument("target", "Default");
 
