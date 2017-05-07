@@ -1,7 +1,7 @@
 #tool "nuget:?package=NUnit.ConsoleRunner"
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Figlet"
-#tool "nuget:?package=ILRepack"
+#tool "nuget:?package=ILMerge"
 #load "./parameters.cake"
 
 
@@ -147,7 +147,7 @@ Task("ILRepack")
     {
         var assemblyPaths = GetFiles(parameters.BuildDir +"/*.dll");
 
-        ILRepack(parameters.ResultBinDir + "/Merged.Cake.SqlServer.dll", parameters.BuildDir + "/Cake.SqlServer.dll", assemblyPaths, new ILRepackSettings { Internalize = true });
+        ILMerge(parameters.ResultBinDir + "/Merged.Cake.SqlServer.dll", parameters.BuildDir + "/Cake.SqlServer.dll", assemblyPaths, new ILMergeSettings { Internalize = true });
     });
 
 Task("Create-NuGet-Packages")
